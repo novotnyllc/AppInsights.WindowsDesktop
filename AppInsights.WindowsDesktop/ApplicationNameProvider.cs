@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing
 {
     using System;
+    using System.Reflection;
 
     internal sealed class ApplicationNameProvider
     {
@@ -22,11 +23,7 @@
             string name;
             try
             {
-#if !WINRT && !CORE_PCL && !NETSTANDARD2_0
-                name = AppDomain.CurrentDomain.FriendlyName;
-#else
-                name = string.Empty;
-#endif
+                name = Assembly.GetEntryAssembly().FullName;
             }
             catch (Exception exp)
             {
