@@ -90,7 +90,7 @@ namespace Microsoft.ApplicationInsights.Channel
 
             if (startSending)
             {
-                Task.Factory.StartNew(this.SendLoop, TaskCreationOptions.LongRunning)
+                Task.Run(this.SendLoop)
                     .ContinueWith(t => CoreEventSource.Log.LogVerbose("Sender: Failure in SendLoop: Exception: " + t.Exception.ToString()), TaskContinuationOptions.OnlyOnFaulted);
             }
         }
@@ -146,7 +146,7 @@ namespace Microsoft.ApplicationInsights.Channel
 
             // if delayHandler was set while a transmision was being sent, the return task waill wait for it to finsih, for an additional second,
             // before it will mark the task as completed. 
-            return Task.Factory.StartNew(() =>
+            return Task.Run(() =>
                 {
                     try
                     {   
@@ -161,15 +161,20 @@ namespace Microsoft.ApplicationInsights.Channel
         /// <summary>
         /// Send transmissions in a loop. 
         /// </summary>
-        protected void SendLoop()
+        protected async Task SendLoop()
         {
             TimeSpan prevSendingInterval = TimeSpan.Zero;
-            TimeSpan sendingInterval = this.sendingIntervalOnNoData;
+
+            var state = new SendState
+            {
+                sendingInterval = this.sendingIntervalOnNoData
+            };
+
             try
             {
                 while (!this.stopped)
                 {
-                    using (StorageTransmission transmission = this.storage.Peek())
+                    using (StorageTransmission transmission = await this.storage.Peek().ConfigureAwait(false))
                     {
                         if (this.stopped)
                         {
@@ -182,7 +187,7 @@ namespace Microsoft.ApplicationInsights.Channel
                         // If there is a transmission to send - send it. 
                         if (transmission != null)
                         {
-                            bool shouldRetry = this.Send(transmission, ref sendingInterval);
+                            bool shouldRetry = await this.Send(transmission, state).ConfigureAwait(false);
                             if (!shouldRetry)
                             {
                                 // If retry is not required - delete the transmission.
@@ -191,13 +196,13 @@ namespace Microsoft.ApplicationInsights.Channel
                         }
                         else
                         {
-                            sendingInterval = this.sendingIntervalOnNoData;
+                            state.sendingInterval = this.sendingIntervalOnNoData;
                         }
                     }
 
-                    LogInterval(prevSendingInterval, sendingInterval);
-                    this.DelayHandler.WaitOne(sendingInterval);
-                    prevSendingInterval = sendingInterval;
+                    LogInterval(prevSendingInterval, state.sendingInterval);
+                    this.DelayHandler.WaitOne(state.sendingInterval);
+                    prevSendingInterval = state.sendingInterval;
                 }
 
                 this.stoppedHandler.Set();
@@ -207,33 +212,38 @@ namespace Microsoft.ApplicationInsights.Channel
             }
         }
 
+        protected class SendState
+        {
+            public TimeSpan sendingInterval;
+        }
+
         /// <summary>
         /// Sends a transmission and handle errors.
         /// </summary>
         /// <param name="transmission">The transmission to send.</param>
-        /// <param name="nextSendInterval">When this value returns it will hold a recommendation for when to start the next sending iteration.</param>
+        /// <param name="state">When this value returns it will hold a recommendation for when to start the next sending iteration.</param>
         /// <returns>A boolean value that indicates if there was a retriable error.</returns>        
-        protected virtual bool Send(StorageTransmission transmission, ref TimeSpan nextSendInterval)
+        protected virtual async Task<bool> Send(StorageTransmission transmission, SendState state)
         {   
             try
             {
                 if (transmission != null)
                 {
-                    transmission.SendAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                    
-                    // After a successful sending, try immeidiately to send another transmission. 
-                    nextSendInterval = this.SendingInterval;
+                    await transmission.SendAsync().ConfigureAwait(false);
+
+                    // After a successful sending, try immeidiately to send another transmission.
+                    state.sendingInterval = this.SendingInterval;
                 }
             }
             catch (WebException e)
             {
                 int? statusCode = GetStatusCode(e);
-                nextSendInterval = this.CalculateNextInterval(statusCode, nextSendInterval, this.maxIntervalBetweenRetries);
+                state.sendingInterval = this.CalculateNextInterval(statusCode, state.sendingInterval, this.maxIntervalBetweenRetries);
                 return IsRetryable(statusCode, e.Status);
             }
             catch (Exception e)
             {
-                nextSendInterval = this.CalculateNextInterval(null, nextSendInterval, this.maxIntervalBetweenRetries);
+                state.sendingInterval = this.CalculateNextInterval(null, state.sendingInterval, this.maxIntervalBetweenRetries);
                 string msg = string.Format(CultureInfo.InvariantCulture, "Unknown exception during sending: {0}", e);
                 CoreEventSource.Log.LogVerbose(msg);
             }
@@ -272,7 +282,7 @@ namespace Microsoft.ApplicationInsights.Channel
         /// </summary>
         private static bool IsRetryable(int? httpStatusCode, WebExceptionStatus webExceptionStatus)
         {
-#if NET40 || NET45 // WINRT doesn't support ProxyNameResolutionFailure/NameResolutionFailure/Timeout/ConnectFailure, for WinPhone this seems like a corner scenario and we don't want to spend the effot to test it now.
+#if NET40 || NET45 || NETSTANDARD2_0 // WINRT doesn't support ProxyNameResolutionFailure/NameResolutionFailure/Timeout/ConnectFailure, for WinPhone this seems like a corner scenario and we don't want to spend the effot to test it now.
             switch (webExceptionStatus)
             {
                 case WebExceptionStatus.ProxyNameResolutionFailure:
