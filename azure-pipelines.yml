@@ -1,0 +1,53 @@
+trigger:
+- master
+- rel/*
+
+pr:
+- master
+- rel/*
+
+pool:
+  vmImage: windows-2019
+
+variables: 
+  BuildConfiguration: Release
+
+steps:
+- task: DotNetCoreCLI@2  
+  inputs:
+    command: custom
+    custom: tool
+    arguments: install --tool-path . nbgv
+  displayName: Install NBGV tool
+
+- script: nbgv cloud
+  displayName: Set Version
+- task: DotNetCoreInstaller@0
+  inputs:
+    version: '3.0.100-preview4-010963'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: pack
+    packagesToPack: AppInsights.WindowsDesktop/AppInsights.WindowsDesktop.csproj
+    configuration: $(BuildConfiguration)
+    packDirectory: $(Build.ArtifactStagingDirectory)\Packages    
+    verbosityPack: Minimal
+  displayName: Build Package
+  
+- task: PowerShell@2
+  displayName: Authenticode Sign artifacts
+  inputs:
+    filePath: scripts/Sign-Package.ps1
+  env:
+    SignClientUser: $(SignClientUser)
+    SignClientSecret: $(SignClientSecret)
+    ArtifactDirectory: $(Build.ArtifactStagingDirectory)\Packages
+  condition: and(succeeded(), not(eq(variables['build.reason'], 'PullRequest')), not(eq(variables['SignClientSecret'], '')), not(eq(variables['SignClientUser'], '')))
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Package Artifacts
+  inputs:
+    pathToPublish: $(Build.ArtifactStagingDirectory)\Packages
+    artifactType: container
+    artifactName: Packages
