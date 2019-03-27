@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28724.11
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppInsights.PersistenceChannel", "AppInsights.PersistenceChannel\AppInsights.PersistenceChannel.csproj", "{55F8FC0E-ACDB-4590-B0D3-F9F8970B0DDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppInsights.WindowsDesktop", "AppInsights.WindowsDesktop\AppInsights.WindowsDesktop.csproj", "{D6E8685A-82C8-459E-A420-33640C0E8251}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{55F8FC0E-ACDB-4590-B0D3-F9F8970B0DDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55F8FC0E-ACDB-4590-B0D3-F9F8970B0DDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55F8FC0E-ACDB-4590-B0D3-F9F8970B0DDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55F8FC0E-ACDB-4590-B0D3-F9F8970B0DDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6E8685A-82C8-459E-A420-33640C0E8251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6E8685A-82C8-459E-A420-33640C0E8251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6E8685A-82C8-459E-A420-33640C0E8251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6E8685A-82C8-459E-A420-33640C0E8251}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {AED27EE8-B851-45F2-86BD-7442900B8FD1}
+		SolutionGuid = {464AE26E-4ABD-405F-8A17-EEAD9B92BEB9}
 	EndGlobalSection
 EndGlobal
