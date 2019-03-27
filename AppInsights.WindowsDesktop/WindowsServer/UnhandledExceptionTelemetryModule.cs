@@ -95,6 +95,7 @@
             {
                 SeverityLevel = SeverityLevel.Critical,
             };
+            exp.Properties.Add("handledAt", "Unhandled");
 
             telemetryClient.TrackException(exp);
             telemetryClient.Flush(); 

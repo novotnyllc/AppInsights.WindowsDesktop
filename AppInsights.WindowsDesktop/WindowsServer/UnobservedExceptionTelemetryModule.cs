@@ -77,6 +77,7 @@
             {
                 SeverityLevel = SeverityLevel.Critical,
             };
+            exp.Properties.Add("handledAt", "UnobservedTask");
 
             // It is theoretically possible for TrackException to throw another UnobservedTaskException but in practice
             // it won't, and even if it did, it would not cause an out of memory exception nor would it cause a stack

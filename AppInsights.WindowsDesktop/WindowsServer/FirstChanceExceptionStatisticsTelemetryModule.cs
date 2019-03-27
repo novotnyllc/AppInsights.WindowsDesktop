@@ -415,7 +415,8 @@
                 }
 
                 // this property allows to differentiate examples from regular exceptions tracked using TrackException
-                exceptionTelemetry.Properties.Add("_MS.Example", "(Name: Exceptions, Ver: 1.0)");
+                exceptionTelemetry.Properties.Add("_MS.Example", "(Name: Exceptions, Ver: 1.0)");                
+                exceptionTelemetry.Properties.Add("handledAt", "FirstChance");
 
                 ((ISupportSampling)exceptionTelemetry).SamplingPercentage = 100;
 
