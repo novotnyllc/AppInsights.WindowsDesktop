@@ -6,6 +6,7 @@
     using System.Net;
     using System.Net.NetworkInformation;
     using System.Threading;
+    using Win32;
 
     /// <summary>
     /// The reader is platform specific and applies to .NET applications only.
@@ -72,15 +73,22 @@
                 return this.deviceId;
             }
 
-            string domainName = IPGlobalProperties.GetIPGlobalProperties().DomainName;
-            string hostName = Dns.GetHostName();
-            
-            if (hostName.EndsWith(domainName, StringComparison.OrdinalIgnoreCase) == false)
-            {
-                hostName = string.Format(CultureInfo.InvariantCulture, "{0}.{1}", hostName, domainName);
-            }
 
-            return this.deviceId = hostName;
+            // This value is only in the 64-bit hive, so make sure we look there
+            if(Environment.Is64BitOperatingSystem)
+            {
+                using (var reg = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                using (var key = reg.OpenSubKey("SOFTWARE\\Microsoft\\Cryptography"))
+                {
+                    this.deviceId = (string)key.GetValue("MachineGuid", "default");
+                }
+            }
+            else
+            {
+                this.deviceId = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Cryptography", "MachineGuid", "default");
+            }
+            
+            return this.deviceId;
         }
 
         /// <summary>
