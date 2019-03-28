@@ -8,7 +8,7 @@
     /// <summary>
     /// ETW EventSource tracing class.
     /// </summary>
-    [EventSource(Name = "Microsoft-ApplicationInsights-Extensibility-WindowsServer")]
+    [EventSource(Name = "Microsoft-ApplicationInsights-Extensibility-WindowsServer-Desktop")]
     [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", Justification = "appDomainName is required")]
     internal sealed class WindowsServerEventSource : EventSource
     {
