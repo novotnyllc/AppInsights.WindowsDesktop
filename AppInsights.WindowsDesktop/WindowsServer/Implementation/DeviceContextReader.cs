@@ -52,6 +52,15 @@
         }
 
         /// <summary>
+        /// Gets the display language.
+        /// </summary>
+        /// <returns>The discovered locale.</returns>
+        public virtual string GetDisplayLanguage()
+        {
+            return CultureInfo.CurrentUICulture.Name;
+        }
+
+        /// <summary>
         /// Gets the type of the device.
         /// </summary>
         /// <returns>The type for this device as a hard-coded string.</returns>

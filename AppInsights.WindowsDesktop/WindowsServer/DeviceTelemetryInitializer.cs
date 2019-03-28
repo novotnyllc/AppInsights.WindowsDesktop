@@ -29,10 +29,10 @@
                 telemetry.Context.Device.Model = reader.GetDeviceModel();
 #pragma warning disable CS0618 // Type or member is obsolete
                 telemetry.Context.Device.NetworkType = reader.GetNetworkType();
-#pragma warning restore CS0618 // Type or member is obsolete
                 telemetry.Context.Properties["ai.device.locale"] = reader.GetHostSystemLocale();
-                telemetry.Context.Properties["ai.device.timezone"] = TimeZoneInfo.Local.DisplayName;
-
+                telemetry.Context.Properties["ai.device.language"] = reader.GetDisplayLanguage();                
+                telemetry.Context.Properties["ai.location.timeZone"] = TimeZoneInfo.Local.DisplayName;
+#pragma warning restore CS0618 // Type or member is obsolete
             }
         }
     }
