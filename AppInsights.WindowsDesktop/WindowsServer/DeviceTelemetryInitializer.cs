@@ -27,6 +27,12 @@
                 telemetry.Context.Device.Id = reader.GetDeviceUniqueId();
                 telemetry.Context.Device.OemName = reader.GetOemName();
                 telemetry.Context.Device.Model = reader.GetDeviceModel();
+#pragma warning disable CS0618 // Type or member is obsolete
+                telemetry.Context.Device.NetworkType = reader.GetNetworkType();
+#pragma warning restore CS0618 // Type or member is obsolete
+                telemetry.Context.Properties["ai.device.locale"] = reader.GetHostSystemLocale();
+                telemetry.Context.Properties["ai.device.timezone"] = TimeZoneInfo.Local.DisplayName;
+
             }
         }
     }
