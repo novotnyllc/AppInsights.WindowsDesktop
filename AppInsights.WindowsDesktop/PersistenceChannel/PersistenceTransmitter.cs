@@ -145,14 +145,14 @@ namespace Microsoft.ApplicationInsights.Channel
         /// </summary>
         /// <param name="item">Telemetry item.</param>
         /// <param name="endpointAddress">Server endpoint address.</param>
-        internal void SendForDeveloperMode(ITelemetry item, string endpointAddress)
+        internal async Task SendForDeveloperModeAsync(ITelemetry item, string endpointAddress)
         {
             try
             {
                 byte[] data = JsonSerializer.Serialize(new[] { item });
                 var transmission = new Transmission(new Uri(endpointAddress), data, "application/x-json-stream", JsonSerializer.CompressionType);
 
-                transmission.SendAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                await transmission.SendAsync().ConfigureAwait(false);
             }
             catch (Exception exception)
             {

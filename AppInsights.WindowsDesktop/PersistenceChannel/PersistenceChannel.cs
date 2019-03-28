@@ -208,7 +208,8 @@ namespace Microsoft.ApplicationInsights.Channel
         {
             if (this.DeveloperMode.HasValue && this.DeveloperMode == true)
             {
-                this.Transmitter.SendForDeveloperMode(item, this.EndpointAddress);
+                // This is inefficient but necessary to ensure it doesn't deadlock
+                Task.Run(() => this.Transmitter.SendForDeveloperModeAsync(item, this.EndpointAddress));
             }
             else
             {
