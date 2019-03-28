@@ -109,11 +109,11 @@ namespace Microsoft.ApplicationInsights.Channel
                                 CoreEventSource.Log.LogVerbose(error);
                             }
 
-                            this.storageFolderInitialized = true;                            
+                            this.storageFolderInitialized = true;
+                            string msg = string.Format("Storage folder: {0}", this.storageFolder == null ? "null" : this.storageFolder.FullName);
+                            CoreEventSource.Log.LogVerbose(msg);
                         }
                     }
-                    string msg = string.Format("Storage folder: {0}", this.storageFolder == null ? "null" : this.storageFolder.FullName);
-                    CoreEventSource.Log.LogVerbose(msg);
                 }
 
                 return this.storageFolder;
