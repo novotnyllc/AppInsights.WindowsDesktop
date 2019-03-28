@@ -208,8 +208,7 @@ namespace Microsoft.ApplicationInsights.Channel
         {
             if (this.DeveloperMode.HasValue && this.DeveloperMode == true)
             {
-                // This is inefficient but is only in the debugger. We don't want to deadlock
-                Task.Run(() => this.Transmitter.SendForDeveloperModeAsync(item, this.EndpointAddress));
+                this.Transmitter.SendForDeveloperMode(item, this.EndpointAddress);
             }
             else
             {

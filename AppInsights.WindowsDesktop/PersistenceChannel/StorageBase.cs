@@ -36,7 +36,7 @@ namespace Microsoft.ApplicationInsights.Channel
 
         internal abstract string FolderName { get; }
 
-        internal abstract Task<StorageTransmission> Peek();
+        internal abstract StorageTransmission Peek();
 
         internal abstract void Delete(StorageTransmission transmission);
 

@@ -24,7 +24,7 @@ namespace Microsoft.ApplicationInsights.Channel
     internal class Storage : StorageBase
     {
         private readonly FixedSizeQueue<string> deletedFilesQueue;
-        private SemaphoreSlim peekLockObj = new SemaphoreSlim(1, 1);
+        private object peekLockObj = new object();
         private DirectoryInfo storageFolder;
         private int transmissionsDropped = 0;
         private string storageFolderName;
@@ -124,12 +124,11 @@ namespace Microsoft.ApplicationInsights.Channel
         /// Reads an item from the storage. Order is Last-In-First-Out. 
         /// When the Transmission is no longer needed (it was either sent or failed with a non-retriable error) it should be disposed. 
         /// </summary>
-        internal override async Task<StorageTransmission> Peek()
+        internal override StorageTransmission Peek()
         {
             IEnumerable<FileInfo> files = this.GetFiles("*.trn");
 
-            await peekLockObj.WaitAsync().ConfigureAwait(false);
-            try
+            lock (this.peekLockObj)
             {
                 foreach (FileInfo file in files)
                 {
@@ -139,7 +138,7 @@ namespace Microsoft.ApplicationInsights.Channel
                         if (this.peekedTransmissions.ContainsKey(file.Name) == false && this.deletedFilesQueue.Contains(file.Name) == false)
                         {
                             // Load the transmission from disk.
-                            StorageTransmission storageTransmissionItem = await LoadTransmissionFromFileAsync(file).ConfigureAwait(false);
+                            StorageTransmission storageTransmissionItem = LoadTransmissionFromFileAsync(file).ConfigureAwait(false).GetAwaiter().GetResult();
 
                             // when item is disposed it should be removed from the peeked list.
                             storageTransmissionItem.Disposing = item => this.OnPeekedItemDisposed(file.Name);
@@ -155,10 +154,6 @@ namespace Microsoft.ApplicationInsights.Channel
                         CoreEventSource.Log.LogVerbose(msg);
                     }
                 }
-            }
-            finally
-            {
-                peekLockObj.Release();
             }
 
             return null;
