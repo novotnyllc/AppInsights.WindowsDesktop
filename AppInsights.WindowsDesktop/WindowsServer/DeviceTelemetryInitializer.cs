@@ -31,7 +31,7 @@
                 telemetry.Context.GlobalProperties["Network type"] = reader.GetNetworkType();
                 telemetry.Context.GlobalProperties["Thread culture"] = reader.GetHostSystemLocale();
                 telemetry.Context.GlobalProperties["UI culture"] = reader.GetDisplayLanguage();                
-                telemetry.Context.GlobalProperties["Time zone"] = TimeZoneInfo.Local.DisplayName;                
+                telemetry.Context.GlobalProperties["Time zone"] = TimeZoneInfo.Local.Id;                
             }
         }
     }
