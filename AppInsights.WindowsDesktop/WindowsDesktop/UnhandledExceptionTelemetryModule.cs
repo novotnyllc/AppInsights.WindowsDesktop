@@ -14,35 +14,52 @@
     /// </summary>
     public sealed class UnhandledExceptionTelemetryModule : ITelemetryModule, IDisposable
     {
-        private readonly ITelemetryChannel channel;
         private readonly Action<UnhandledExceptionEventHandler> unregisterAction;
-        
+        private readonly Action<UnhandledExceptionEventHandler> registerAction;
+        private readonly object lockObject = new object();
+
+        private TelemetryClient telemetryClient;
+        private bool isInitialized = false;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UnhandledExceptionTelemetryModule"/> class.
         /// </summary>
         public UnhandledExceptionTelemetryModule() : this(
             action => AppDomain.CurrentDomain.UnhandledException += action,
-            action => AppDomain.CurrentDomain.UnhandledException -= action,
-            new InMemoryChannel())
+            action => AppDomain.CurrentDomain.UnhandledException -= action)
         {
         }
 
         internal UnhandledExceptionTelemetryModule(
             Action<UnhandledExceptionEventHandler> registerAction,
-            Action<UnhandledExceptionEventHandler> unregisterAction,
-            ITelemetryChannel channel)
+            Action<UnhandledExceptionEventHandler> unregisterAction)
         {
             this.unregisterAction = unregisterAction;
-            this.channel = channel;
-
-            registerAction(this.CurrentDomainOnUnhandledException);
+            this.registerAction = registerAction;
         }
 
         /// <summary>
         /// Initializes the telemetry module.
         /// </summary>
+        /// <param name="configuration">Telemetry Configuration used for creating TelemetryClient for sending exceptions to ApplicationInsights.</param>
         public void Initialize(TelemetryConfiguration configuration)
         {
+            // Core SDK creates 1 instance of a module but calls Initialize multiple times
+            if (!this.isInitialized)
+            {
+                lock (this.lockObject)
+                {
+                    if (!this.isInitialized)
+                    {
+                        this.isInitialized = true;
+
+                        this.telemetryClient = new TelemetryClient(configuration);
+                        this.telemetryClient.Context.GetInternalContext().SdkVersion = SdkVersionUtils.GetSdkVersion("unhnd:");
+
+                        this.registerAction(this.CurrentDomainOnUnhandledException);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -51,54 +68,29 @@
         public void Dispose()
         {
             this.unregisterAction(this.CurrentDomainOnUnhandledException);
-
-            if (this.channel != null)
-            {
-                this.channel.Dispose();
-            }
         }
 
-        private static void CopyConfiguration(TelemetryConfiguration source, TelemetryConfiguration target)
-        {
-            target.InstrumentationKey = source.InstrumentationKey;            
 
-            foreach (var telemetryInitializer in source.TelemetryInitializers)
-            {
-                target.TelemetryInitializers.Add(telemetryInitializer);
-            }
-        }
-
-        private TelemetryClient GetTelemetryClient(TelemetryConfiguration sourceConfiguration)
-        {
-            this.channel.EndpointAddress = sourceConfiguration.TelemetryChannel.EndpointAddress;
-
-            var newConfiguration = new TelemetryConfiguration
-            {
-                TelemetryChannel = this.channel
-            };
-
-            CopyConfiguration(sourceConfiguration, newConfiguration);
-
-            var telemetryClient = new TelemetryClient(newConfiguration);
-            telemetryClient.Context.GetInternalContext().SdkVersion = SdkVersionUtils.GetSdkVersion("unhnd:");
-
-            return telemetryClient;
-        }
 
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
             WindowsServerEventSource.Log.CurrentDomainOnUnhandledException();
-
-            var telemetryClient = this.GetTelemetryClient(TelemetryConfiguration.Active);
-
-            var exp = new ExceptionTelemetry(unhandledExceptionEventArgs.ExceptionObject as Exception)
+            try
             {
-                SeverityLevel = SeverityLevel.Critical,
-            };
-            exp.Properties.Add("handledAt", "Unhandled");
 
-            telemetryClient.TrackException(exp);
-            telemetryClient.Flush(); 
+                var exp = new ExceptionTelemetry(unhandledExceptionEventArgs.ExceptionObject as Exception)
+                {
+                    SeverityLevel = SeverityLevel.Critical,
+                };
+                exp.Properties.Add("handledAt", "Unhandled");
+
+                telemetryClient.TrackException(exp);
+                telemetryClient.Flush(); // we want this to send right away
+            }
+            catch
+            {
+                // Nothing we can do here
+            }
         }
     }
 }
