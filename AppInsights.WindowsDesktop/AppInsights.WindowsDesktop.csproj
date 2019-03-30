@@ -16,7 +16,7 @@
     <PackageProjectUrl>https://github.com/onovotny/AppInsights.WindowsDesktop</PackageProjectUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0' or '$(TargetFramework)' == 'net461'">
     <UseWindowsForms>true</UseWindowsForms>
     <UseWpf>true</UseWpf>
   </PropertyGroup>

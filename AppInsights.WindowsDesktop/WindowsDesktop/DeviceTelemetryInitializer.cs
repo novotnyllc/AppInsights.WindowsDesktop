@@ -1,6 +1,7 @@
 ﻿namespace Microsoft.ApplicationInsights.WindowsDesktop
 {
     using System;
+    using System.Runtime.InteropServices;
     using Microsoft.ApplicationInsights.Channel;
     using Microsoft.ApplicationInsights.Extensibility;
     using Microsoft.ApplicationInsights.WindowsDesktop.Implementation;
@@ -9,7 +10,14 @@
     /// A telemetry context initializer that will gather device context information.
     /// </summary>
     public class DeviceTelemetryInitializer : ITelemetryInitializer
-    {      
+    {
+
+#if !NET461
+        private readonly string _operatingSystem = RuntimeInformation.OSDescription?.Replace("Microsoft ", ""); // Shorter description
+#else
+        private readonly string _operatingSystem =$"Windows {Environment.OSVersion.Version.ToString(3)}"; // Shorter description, to match the other platforms
+#endif
+
         /// <summary>
         /// Populates device properties on a telemetry item.
         /// </summary>
