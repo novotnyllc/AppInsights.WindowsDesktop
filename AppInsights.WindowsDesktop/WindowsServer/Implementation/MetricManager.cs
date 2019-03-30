@@ -949,7 +949,7 @@
         }
     }
     
-    [EventSource(Name = "Microsoft-ApplicationInsights-WindowsServer-Core")]
+    [EventSource(Name = "Microsoft-ApplicationInsights-WindowsServer-Core-Desktop")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "This is a temporary private MetricManager")]
     [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", Justification = "appDomainName is required")]
     internal sealed class WindowsServerCoreEventSource : EventSource
