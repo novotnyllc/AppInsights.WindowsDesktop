@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.0;uap10.0.16299;net461</TargetFrameworks>
     <RootNamespace>Microsoft.ApplicationInsights</RootNamespace>
     <Description>Based on Application Insights SDK Windows for Desktop</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -13,12 +13,26 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWpf>true</UseWpf>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.10.0-beta2" />
     <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.138" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All" />
+
+    
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
     <PackageReference Include="System.Management" Version="4.6.0-preview3.19128.7" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.6.0-preview3.19128.7" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <Reference Include="System.Management" />
   </ItemGroup>
   
 </Project>

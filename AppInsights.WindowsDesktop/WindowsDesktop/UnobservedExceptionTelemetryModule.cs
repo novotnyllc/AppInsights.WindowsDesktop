@@ -1,4 +1,4 @@
-﻿namespace Microsoft.ApplicationInsights.WindowsServer
+﻿namespace Microsoft.ApplicationInsights.WindowsDesktop
 {
     using System;
     using System.Threading.Tasks;
@@ -6,7 +6,7 @@
     using Microsoft.ApplicationInsights.DataContracts;
     using Microsoft.ApplicationInsights.Extensibility;
     using Microsoft.ApplicationInsights.Extensibility.Implementation;
-    using Microsoft.ApplicationInsights.WindowsServer.Implementation;
+    using Microsoft.ApplicationInsights.WindowsDesktop.Implementation;
 
     /// <summary>
     /// The module subscribed to TaskScheduler.UnobservedTaskException to send exceptions to ApplicationInsights.

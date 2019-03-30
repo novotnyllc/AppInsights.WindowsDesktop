@@ -1,4 +1,4 @@
-﻿namespace Microsoft.ApplicationInsights.WindowsServer
+﻿namespace Microsoft.ApplicationInsights.WindowsDesktop
 {
     using System;
     using System.Collections.Concurrent;

@@ -1,13 +1,7 @@
 ﻿namespace Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing
 {
     using System;
-
-#if NET40 || NET35
-    using Microsoft.Diagnostics.Tracing;
-#endif
-#if CORE_PCL || NET45 || WINRT || NETSTANDARD2_0
     using System.Diagnostics.Tracing;
-#endif
 
     [EventSource(Name = "Microsoft-ApplicationInsights-Core-Desktop")]
     internal sealed class CoreEventSource : EventSource

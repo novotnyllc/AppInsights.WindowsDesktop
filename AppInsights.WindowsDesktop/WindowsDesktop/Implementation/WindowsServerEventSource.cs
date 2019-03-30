@@ -1,4 +1,4 @@
-﻿namespace Microsoft.ApplicationInsights.WindowsServer.Implementation
+﻿namespace Microsoft.ApplicationInsights.WindowsDesktop.Implementation
 {
     using System;
     using System.Diagnostics.CodeAnalysis;

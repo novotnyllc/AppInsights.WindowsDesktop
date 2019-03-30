@@ -1,22 +1,23 @@
-﻿namespace Microsoft.ApplicationInsights.WindowsServer.Implementation
+﻿namespace Microsoft.ApplicationInsights.WindowsDesktop.Implementation
 {
     using System;
     using System.Globalization;
-    using System.Management;
+    
     using System.Net;
     using System.Net.NetworkInformation;
     using System.Threading;
     using Win32;
+
+#if NET461 || NETCOREAPP3_0
+    using System.Management;
+#endif
 
     /// <summary>
     /// The reader is platform specific and applies to .NET applications only.
     /// </summary>
     internal class DeviceContextReader
     {
-        private static DeviceContextReader instance;
-        private string deviceId;
-        private string deviceManufacturer;
-        private string deviceName;
+        private static DeviceContextReader instance;        
         private string networkType;
 
         /// <summary>
@@ -69,6 +70,39 @@
             return "PC";
         }
 
+
+        /// <summary>
+        /// Gets the network type.
+        /// </summary>
+        /// <returns>The discovered network type.</returns>
+        public string GetNetworkType()
+        {
+            if (string.IsNullOrEmpty(this.networkType))
+            {
+                if (NetworkInterface.GetIsNetworkAvailable())
+                {
+                    foreach (NetworkInterface networkInterface in NetworkInterface.GetAllNetworkInterfaces())
+                    {
+                        if (networkInterface.OperationalStatus == OperationalStatus.Up)
+                        {
+                            this.networkType = networkInterface.NetworkInterfaceType.ToString();
+                            return this.networkType;
+                        }
+                    }
+                }
+
+                this.networkType = NetworkInterfaceType.Unknown.ToString();
+            }
+
+            return this.networkType;
+        }
+
+
+#if NET461 || NETCOREAPP3_0
+        private string deviceId;
+        private string deviceManufacturer;
+        private string deviceName;
+
         /// <summary>
         /// Gets the device unique ID, or uses the fallback if none is available due to application configuration.
         /// </summary>
@@ -96,7 +130,7 @@
             {
                 this.deviceId = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Cryptography", "MachineGuid", "default");
             }
-            
+
             return this.deviceId;
         }
 
@@ -128,31 +162,6 @@
             return this.deviceName = RunWmiQuery("Win32_ComputerSystem", "Model", string.Empty);
         }
 
-        /// <summary>
-        /// Gets the network type.
-        /// </summary>
-        /// <returns>The discovered network type.</returns>
-        public string GetNetworkType()
-        {
-            if (string.IsNullOrEmpty(this.networkType))
-            {
-                if (NetworkInterface.GetIsNetworkAvailable())
-                {
-                    foreach (NetworkInterface networkInterface in NetworkInterface.GetAllNetworkInterfaces())
-                    {
-                        if (networkInterface.OperationalStatus == OperationalStatus.Up)
-                        {
-                            this.networkType = networkInterface.NetworkInterfaceType.ToString();
-                            return this.networkType;
-                        }
-                    }
-                }
-
-                this.networkType = NetworkInterfaceType.Unknown.ToString();
-            }
-
-            return this.networkType;
-        }
 
         /// <summary>
         /// Runs a single WMI query for a property.
@@ -184,5 +193,6 @@
 
             return defaultValue;
         }
+#endif
     }
 }

@@ -3,7 +3,7 @@
 This is an update to the original Application Insights for Desktop applications SDK, first blogged about here: http://apmtips.com/blog/2015/08/08/application-insights-for-desktop-applications/.
 
 It goes beyond what the docs outline here https://docs.microsoft.com/en-us/azure/azure-monitor/app/windows-desktop, by ensuring it also works
-for .NET Core 3 based desktop apps. With these steps, you don't need to add the `Microsoft.ApplicationInsights.WindowsServer` package,
+for .NET Core 3 based desktop apps. With these steps, you don't need to add the `Microsoft.ApplicationInsights.WindowsDesktop` package,
 just this one `AppInsights.WindowsDesktop`.
 
 It adds the following capaiblities (taken from the Windows Server package) to desktop apps
@@ -24,13 +24,13 @@ Add an `ApplicationInsights.config` file to your main executable project with an
 <?xml version="1.0" encoding="utf-8"?>
 <ApplicationInsights xmlns="http://schemas.microsoft.com/ApplicationInsights/2013/Settings">
 	<TelemetryInitializers>
-		<Add Type="Microsoft.ApplicationInsights.WindowsServer.DeviceTelemetryInitializer, AppInsights.WindowsDesktop"/>
+		<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.DeviceTelemetryInitializer, AppInsights.WindowsDesktop"/>
 	</TelemetryInitializers>
 	<TelemetryModules>
-		<Add Type="Microsoft.ApplicationInsights.WindowsServer.DeveloperModeWithDebuggerAttachedTelemetryModule, AppInsights.WindowsDesktop"/>
-		<Add Type="Microsoft.ApplicationInsights.WindowsServer.UnhandledExceptionTelemetryModule, AppInsights.WindowsDesktop"/>
-		<Add Type="Microsoft.ApplicationInsights.WindowsServer.UnobservedExceptionTelemetryModule, AppInsights.WindowsDesktop" />
-    <Add Type="Microsoft.ApplicationInsights.WindowsServer.FirstChanceExceptionStatisticsTelemetryModule, AppInsights.WindowsDesktop" />
+		<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.DeveloperModeWithDebuggerAttachedTelemetryModule, AppInsights.WindowsDesktop"/>
+		<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnhandledExceptionTelemetryModule, AppInsights.WindowsDesktop"/>
+		<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnobservedExceptionTelemetryModule, AppInsights.WindowsDesktop" />
+    <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.FirstChanceExceptionStatisticsTelemetryModule, AppInsights.WindowsDesktop" />
 	</TelemetryModules>
 	<TelemetryProcessors>
 		<Add Type="Microsoft.ApplicationInsights.Extensibility.AutocollectedMetricsExtractor, Microsoft.ApplicationInsights"/>
