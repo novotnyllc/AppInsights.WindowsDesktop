@@ -27,15 +27,14 @@ steps:
 - script: nbgv cloud
   displayName: Set Version
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: pack
-    packagesToPack: AppInsights.WindowsDesktop/AppInsights.WindowsDesktop.csproj
-    configuration: $(BuildConfiguration)
-    packDirectory: $(Build.ArtifactStagingDirectory)\Packages    
-    verbosityPack: Minimal
+- task: MSBuild@1
   displayName: Build Package
-  
+  inputs:
+    solution: AppInsights.WindowsDesktop/AppInsights.WindowsDesktop.csproj 
+    msbuildArguments: /restore /t:pack /p:NoPackageAnalysis=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)\Packages
+    configuration: $(BuildConfiguration)
+    maximumCpuCount: true
+
 - task: PowerShell@2
   displayName: Authenticode Sign artifacts
   inputs:
