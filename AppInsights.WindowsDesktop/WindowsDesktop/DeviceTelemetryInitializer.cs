@@ -31,6 +31,10 @@
                 telemetry.Context.Device.Model = reader.GetDeviceModel();
 #endif
 
+#if WINDOWS_UWP
+                telemetry.Context.Device.Id = reader.GetDeviceUniqueId();
+#endif
+
                 telemetry.Context.GlobalProperties["Network type"] = reader.GetNetworkType();
                 telemetry.Context.GlobalProperties["Thread culture"] = reader.GetHostSystemLocale();
                 telemetry.Context.GlobalProperties["UI culture"] = reader.GetDisplayLanguage();                

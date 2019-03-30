@@ -1,15 +1,19 @@
 ﻿namespace Microsoft.ApplicationInsights.WindowsDesktop.Implementation
 {
     using System;
-    using System.Globalization;
-    
-    using System.Net;
+    using System.Globalization;    
     using System.Net.NetworkInformation;
     using System.Threading;
-    using Win32;
+
 
 #if NET461 || NETCOREAPP3_0
+    using Win32;
     using System.Management;
+#endif
+
+#if WINDOWS_UWP
+    using Windows.Security.Cryptography;
+    using Windows.System.Profile;
 #endif
 
     /// <summary>
@@ -192,6 +196,27 @@
             }
 
             return defaultValue;
+        }
+#endif
+
+#if WINDOWS_UWP
+        private string deviceId;
+        /// <summary>
+        /// Gets the device unique ID, or uses the fallback if none is available due to application configuration.
+        /// </summary>
+        /// <returns>
+        /// The discovered device identifier.
+        /// </returns>
+        public virtual string GetDeviceUniqueId()
+        {
+            if (this.deviceId != null)
+            {
+                return this.deviceId;
+            }
+
+            this.deviceId = CryptographicBuffer.EncodeToBase64String(SystemIdentification.GetSystemIdForPublisher().Id);
+
+            return this.deviceId;
         }
 #endif
     }
