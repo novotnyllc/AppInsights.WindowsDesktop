@@ -15,6 +15,8 @@ It adds the following capaiblities (taken from the Windows Server package) to de
 - `DeveloperModeWithDebuggerAttachedTelemetryModule`: sets DebugMode to `true` if in the debugger
 - `UnobservedExceptionTelemetryModule`: reports unobserved task exceptions
 - `UnhandledExceptionTelemetryModule`: reports unhandled exceptions
+- `SessionTelemetryInitializer`: Initializes session id and user id
+- `VersionTelemetryInitializer`: Initializes CLR version and Application Version (from `AssemblyInformationalVersion` attribute of the entrypoint)
 
 
 ## Usage
@@ -23,19 +25,21 @@ Add an `ApplicationInsights.config` file to your main executable project with an
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <ApplicationInsights xmlns="http://schemas.microsoft.com/ApplicationInsights/2013/Settings">
-	<TelemetryInitializers>
-		<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.DeviceTelemetryInitializer, AppInsights.WindowsDesktop"/>
-	</TelemetryInitializers>
-	<TelemetryModules>
-		<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.DeveloperModeWithDebuggerAttachedTelemetryModule, AppInsights.WindowsDesktop"/>
-		<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnhandledExceptionTelemetryModule, AppInsights.WindowsDesktop"/>
-		<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnobservedExceptionTelemetryModule, AppInsights.WindowsDesktop" />
+  <TelemetryInitializers>
+    <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.DeviceTelemetryInitializer, AppInsights.WindowsDesktop"/>
+    <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.SessionTelemetryInitializer, AppInsights.WindowsDesktop"/>
+    <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.VersionTelemetryInitializer, AppInsights.WindowsDesktop"/>
+  </TelemetryInitializers>
+  <TelemetryModules>
+    <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.DeveloperModeWithDebuggerAttachedTelemetryModule, AppInsights.WindowsDesktop"/>
+    <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnhandledExceptionTelemetryModule, AppInsights.WindowsDesktop"/>
+    <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnobservedExceptionTelemetryModule, AppInsights.WindowsDesktop" />
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.FirstChanceExceptionStatisticsTelemetryModule, AppInsights.WindowsDesktop" />
-	</TelemetryModules>
-	<TelemetryProcessors>
-		<Add Type="Microsoft.ApplicationInsights.Extensibility.AutocollectedMetricsExtractor, Microsoft.ApplicationInsights"/>
-	</TelemetryProcessors>
-	<TelemetryChannel Type="Microsoft.ApplicationInsights.Channel.PersistenceChannel, AppInsights.WindowsDesktop"/>
+  </TelemetryModules>
+  <TelemetryProcessors>
+    <Add Type="Microsoft.ApplicationInsights.Extensibility.AutocollectedMetricsExtractor, Microsoft.ApplicationInsights"/>
+  </TelemetryProcessors>
+  <TelemetryChannel Type="Microsoft.ApplicationInsights.Channel.PersistenceChannel, AppInsights.WindowsDesktop"/>
 </ApplicationInsights>
 ```
 
