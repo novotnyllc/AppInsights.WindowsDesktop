@@ -34,7 +34,7 @@ Add an `ApplicationInsights.config` file to your main executable project with an
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.DeveloperModeWithDebuggerAttachedTelemetryModule, AppInsights.WindowsDesktop"/>
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnhandledExceptionTelemetryModule, AppInsights.WindowsDesktop"/>
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnobservedExceptionTelemetryModule, AppInsights.WindowsDesktop" />
-    <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.FirstChanceExceptionStatisticsTelemetryModule, AppInsights.WindowsDesktop" />
+    <!--<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.FirstChanceExceptionStatisticsTelemetryModule, AppInsights.WindowsDesktop" />-->
   </TelemetryModules>
   <TelemetryProcessors>
     <Add Type="Microsoft.ApplicationInsights.Extensibility.AutocollectedMetricsExtractor, Microsoft.ApplicationInsights"/>
