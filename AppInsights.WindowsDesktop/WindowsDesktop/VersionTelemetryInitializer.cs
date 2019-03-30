@@ -9,13 +9,10 @@ using Microsoft.ApplicationInsights.Extensibility;
 namespace Microsoft.ApplicationInsights.WindowsDesktop
 {
     /// <summary>
-    /// Telemetry initializer that adds the CLR version, Application Version, and WPF version (if available).
+    /// Telemetry initializer that adds the CLR version and Application Version.
     /// </summary>
     public class VersionTelemetryInitializer : ITelemetryInitializer
     {
-#if NETCOREAPP3_0 || NET461
-        private readonly string _wpfVersion;
-#endif
         private readonly string _clrVersion;
         private readonly string _appVersion;
 
@@ -24,9 +21,6 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
         /// </summary>
         public VersionTelemetryInitializer()
         {
-#if NETCOREAPP3_0 || NET461
-            _wpfVersion = typeof(System.Windows.Application).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-#endif
             _clrVersion = typeof(string).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
             _appVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
         }
@@ -44,15 +38,7 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
             if (_clrVersion != null)
             {
                 telemetry.Context.GlobalProperties["CLR version"] = _clrVersion;
-            }
-
-#if NETCOREAPP3_0 || NET461
-            if (_wpfVersion != null)
-            {
-                telemetry.Context.GlobalProperties["WPF version"] = _wpfVersion;
-            }
-#endif
-            
+            }            
         }
     }
 
