@@ -17,6 +17,10 @@ It adds the following capaiblities (taken from the Windows Server package) to de
 - `UnhandledExceptionTelemetryModule`: reports unhandled exceptions
 - `SessionTelemetryInitializer`: Initializes session id and user id
 - `VersionTelemetryInitializer`: Initializes CLR version and Application Version (from `AssemblyInformationalVersion` attribute of the entrypoint)
+- `WTSSessionTelemetryInitializer`: Reports Remote Desktop and Remote Control states
+- `GraphicsTelemetryInitializer`: Reports various graphics hardware metric like Graphics Card and driver version, supported DirectX Feature Level. Various WPF Rendering settings.
+- `WTSSessionTelemetryModule`: Reports changes to the Windows Terminal Services state, like logging on/off, connect/disconnect remote desktop etc.
+- `GraphicsTelemetryModule`: Reports changes to the graphics capabilities of the system.
 
 
 ## Usage
@@ -29,12 +33,16 @@ Add an `ApplicationInsights.config` file to your main executable project with an
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.DeviceTelemetryInitializer, AppInsights.WindowsDesktop"/>
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.SessionTelemetryInitializer, AppInsights.WindowsDesktop"/>
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.VersionTelemetryInitializer, AppInsights.WindowsDesktop"/>
+    <!--<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.GraphicsTelemetryInitializer, AppInsights.WindowsDesktop"/>-->
+    <!--<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.WTSSessionTelemetryInitializer, AppInsights.WindowsDesktop"/>-->
   </TelemetryInitializers>
   <TelemetryModules>
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.DeveloperModeWithDebuggerAttachedTelemetryModule, AppInsights.WindowsDesktop"/>
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnhandledExceptionTelemetryModule, AppInsights.WindowsDesktop"/>
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnobservedExceptionTelemetryModule, AppInsights.WindowsDesktop" />
     <!--<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.FirstChanceExceptionStatisticsTelemetryModule, AppInsights.WindowsDesktop" />-->
+    <!--<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.WTSSessionTelemetryModule, AppInsights.WindowsDesktop" />-->
+    <!--<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.GraphicsTelemetryModule, AppInsights.WindowsDesktop" />-->
   </TelemetryModules>
   <TelemetryProcessors>
     <Add Type="Microsoft.ApplicationInsights.Extensibility.AutocollectedMetricsExtractor, Microsoft.ApplicationInsights"/>
