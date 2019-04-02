@@ -30,17 +30,9 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
             catch { _drivers = new string[] { }; }
             var disable = Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Avalon.Graphics", "DisableHWAcceleration", 0);
             _softwareRenderingRegistry = (disable is int value && value == 1);
-            System.Windows.Media.RenderCapability.TierChanged += RenderCapability_TierChanged;
 #endif
         }
 
-#if !NETFX_CORE
-        private void RenderCapability_TierChanged(object sender, EventArgs e)
-        {
-            //TODO
-            //DiagnosticsClient.TrackEvent("WPF Rendering Capability Tier Changed", new Dictionary<string, string> { { "DX Rendering Capability Tier", System.Windows.Media.RenderCapability.Tier.ToString() } });
-        }
-#endif
         /// <summary>
         /// Populates graphics properties on a telemetry item.
         /// </summary>
@@ -59,6 +51,8 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
             }
 #endif
         }
+
+
 
 #if !NETFX_CORE
         private static IEnumerable<string> GetDrivers()
@@ -123,7 +117,7 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
         private const uint D3D_FEATURE_LEVEL_11_1 = 0xb100;
         private const uint D3D_FEATURE_LEVEL_12_0 = 0xc000;
         private const uint D3D_FEATURE_LEVEL_12_1 = 0xc100;
-        private const uint D3D_DRIVER_TYPE_NULL = 3;
+
     }
 }
 #endif
