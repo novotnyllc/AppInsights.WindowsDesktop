@@ -41,6 +41,7 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
                 }
             }
         }
+
         private void RenderCapability_TierChanged(object sender, EventArgs e)
         {
             _telemetryClient.TrackEvent("WPF Rendering Capability Tier Changed", new Dictionary<string, string> { { "DX Rendering Capability Tier", System.Windows.Media.RenderCapability.Tier.ToString() } });

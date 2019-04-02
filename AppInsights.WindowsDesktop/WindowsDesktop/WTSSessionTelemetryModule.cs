@@ -12,7 +12,7 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
     public class WTSSessionTelemetryModule : ITelemetryModule, IDisposable
     {
         private readonly object _lockObject = new object();
-        private WTSSessionHelper helper;
+        private WTSSessionHelper _helper;
         private TelemetryClient _telemetryClient;
         private bool _isInitialized = false;
 
@@ -51,10 +51,10 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
 
         private void InitializeHelper(Window window)
         {
-            helper = new WTSSessionHelper(window);
-            helper.SessionStateChanged += WTS_SessionStateChanged;
-            helper.RemoteControlChanged += WTS_RemoteControlChanged;
-            helper.RemoteDesktopChanged += WTS_RemoteDesktopChanged;
+            _helper = new WTSSessionHelper(window);
+            _helper.SessionStateChanged += WTS_SessionStateChanged;
+            _helper.RemoteControlChanged += WTS_RemoteControlChanged;
+            _helper.RemoteDesktopChanged += WTS_RemoteDesktopChanged;
         }
 
         /// <inheritdoc cref="ITelemetryModule.Initialize(TelemetryConfiguration)" />
@@ -93,7 +93,7 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
         /// </summary>
         public void Dispose()
         {
-            helper?.Dispose();
+            _helper?.Dispose();
         }
     }
 }

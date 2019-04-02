@@ -52,8 +52,6 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
 #endif
         }
 
-
-
 #if !NETFX_CORE
         private static IEnumerable<string> GetDrivers()
         {
@@ -117,7 +115,6 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
         private const uint D3D_FEATURE_LEVEL_11_1 = 0xb100;
         private const uint D3D_FEATURE_LEVEL_12_0 = 0xc000;
         private const uint D3D_FEATURE_LEVEL_12_1 = 0xc100;
-
     }
 }
 #endif
