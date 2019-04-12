@@ -15,6 +15,7 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
         private WTSSessionHelper _helper;
         private TelemetryClient _telemetryClient;
         private bool _isInitialized = false;
+        private Action _disposeActivationListener;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WTSSessionTelemetryModule"/> class.
@@ -35,16 +36,22 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
             }
             else
             {
-                Application.Current.Activated += Application_Activated;
+                var app = Application.Current;
+                if (app != null)
+                {
+
+                    _disposeActivationListener = () => { app.Activated -= Application_Activated; _disposeActivationListener = null; };
+                    app.Activated += Application_Activated;
+                }
             }
         }
 
         private void Application_Activated(object sender, EventArgs e)
         {
-            var window = Application.Current.MainWindow;
+            var window = Application.Current?.MainWindow;
             if (window != null)
             {
-                Application.Current.Activated -= Application_Activated;
+                _disposeActivationListener?.Invoke();
                 InitializeHelper(window);
             }
         }
@@ -93,6 +100,7 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
         /// </summary>
         public void Dispose()
         {
+            _disposeActivationListener?.Invoke();
             _helper?.Dispose();
         }
     }
