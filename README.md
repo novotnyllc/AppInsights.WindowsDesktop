@@ -3,7 +3,7 @@
 This is an update to the original Application Insights for Desktop applications SDK, first blogged about here: http://apmtips.com/blog/2015/08/08/application-insights-for-desktop-applications/.
 
 It goes beyond what the docs outline here https://docs.microsoft.com/en-us/azure/azure-monitor/app/windows-desktop, by ensuring it also works
-for .NET Core 3 based desktop apps. With these steps, you don't need to add the `Microsoft.ApplicationInsights.WindowsDesktop` package,
+for .NET Core 3 based desktop apps. With these steps, you don't need to add the `Microsoft.ApplicationInsights.WindowsServer` package,
 just this one `AppInsights.WindowsDesktop`.
 
 It adds the following capaiblities (taken from the Windows Server package) to desktop apps
