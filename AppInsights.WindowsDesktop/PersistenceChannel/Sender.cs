@@ -134,6 +134,12 @@ namespace Microsoft.ApplicationInsights.Channel
             }
         }
 
+        internal void ForceSendNow()
+        {
+            // sets the delay handler to trigger an immediate sent
+            this.DelayHandler.Set();
+        }
+
         /// <summary>
         /// Stops the sender. 
         /// </summary>

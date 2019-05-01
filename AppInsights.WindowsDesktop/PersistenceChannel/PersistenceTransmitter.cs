@@ -208,6 +208,15 @@ namespace Microsoft.ApplicationInsights.Channel
             }
         }
 
+        public void ForceImmediateSend()
+        {
+            foreach (var sender in this.senders)
+            {
+                sender.ForceSendNow();
+            }
+        }
+
+
         /// <summary>
         /// Create senders to send telemetries. 
         /// </summary>

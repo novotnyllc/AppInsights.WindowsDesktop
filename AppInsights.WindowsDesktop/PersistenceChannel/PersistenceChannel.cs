@@ -218,11 +218,12 @@ namespace Microsoft.ApplicationInsights.Channel
         }
 
         /// <summary>
-        /// Flushes the in-memory buffer to disk. 
+        /// Flushes the in-memory buffer to disk. And attempt to send
         /// </summary>
         public void Flush()
         {   
             this.flushManager.Flush();
+            this.Transmitter.ForceImmediateSend();
         }        
     }
 }
