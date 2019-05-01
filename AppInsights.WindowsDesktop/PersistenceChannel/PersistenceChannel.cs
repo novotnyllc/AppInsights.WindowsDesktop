@@ -56,8 +56,7 @@ namespace Microsoft.ApplicationInsights.Channel
             this.storage = new Storage(storageFolderName);
             this.Transmitter = new PersistenceTransmitter(this.storage, sendersCount);
             this.flushManager = new FlushManager(this.storage, this.TelemetryBuffer);
-            this.EndpointAddress = Constants.TelemetryServiceEndpoint;
-            this.developerMode = false;
+            this.EndpointAddress = Constants.TelemetryServiceEndpoint;            
         }
 
         /// <summary>
