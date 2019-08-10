@@ -14,8 +14,12 @@
 
 #if !NET461
         private readonly string _operatingSystem = RuntimeInformation.OSDescription?.Replace("Microsoft ", ""); // Shorter description
+        private readonly string _processArchitecture = RuntimeInformation.ProcessArchitecture.ToString();
+        private readonly string _osArchitecture = RuntimeInformation.OSArchitecture.ToString();
 #else
         private readonly string _operatingSystem =$"Windows {Environment.OSVersion.Version.ToString(3)}"; // Shorter description, to match the other platforms
+        private readonly string _processArchitecture = Environment.Is64BitProcess ? "X64" : "X86";
+        private readonly string _osArchitecture = Environment.Is64BitOperatingSystem ? "X64" : "X86";
 #endif
 
         /// <summary>
@@ -47,7 +51,10 @@
                 telemetry.Context.GlobalProperties["Network type"] = reader.GetNetworkType();
                 telemetry.Context.GlobalProperties["Thread culture"] = reader.GetHostSystemLocale();
                 telemetry.Context.GlobalProperties["UI culture"] = reader.GetDisplayLanguage();                
-                telemetry.Context.GlobalProperties["Time zone"] = TimeZoneInfo.Local.Id;                
+                telemetry.Context.GlobalProperties["Time zone"] = TimeZoneInfo.Local.Id;
+
+                telemetry.Context.GlobalProperties["Process architecture"] = _processArchitecture;
+                telemetry.Context.GlobalProperties["OS architecture"] = _osArchitecture;
             }
         }
     }
