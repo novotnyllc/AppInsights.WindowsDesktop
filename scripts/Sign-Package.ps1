@@ -16,6 +16,9 @@ $nupgks = Get-ChildItem $Env:ArtifactDirectory\*.nupkg | Select-Object -ExpandPr
 foreach ($nupkg in $nupgks) {
     Write-Host "Submitting $nupkg for signing"
     .\SignClient 'sign' -c $appSettings -i $nupkg -r $env:SignClientUser -s $env:SignClientSecret -n 'AppInsights.WindowsDesktop' -d 'AppInsights.WindowsDesktop' -u 'https://github.com/onovotny/https://github.com/onovotny/AppInsights.WindowsDesktop'
+    if ($LASTEXITCODE -ne 0) {
+      exit 1
+    }
     Write-Host "Finished signing $nupkg"
 }
 
