@@ -48,6 +48,10 @@
                 telemetry.Context.Device.Id = reader.GetDeviceUniqueId();
 #endif
 
+                // Overwrite capture of host name
+                telemetry.Context.Cloud.RoleInstance = telemetry.Context.Device.Id;
+                telemetry.Context.Cloud.RoleName = telemetry.Context.Device.Id;
+
                 telemetry.Context.GlobalProperties["Network type"] = reader.GetNetworkType();
                 telemetry.Context.GlobalProperties["Thread culture"] = reader.GetHostSystemLocale();
                 telemetry.Context.GlobalProperties["UI culture"] = reader.GetDisplayLanguage();                
