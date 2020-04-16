@@ -2,18 +2,16 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netcoreapp3.0;uap10.0.16299;net461</TargetFrameworks>
+    <!-- Build with latest SDK even when TPMV is less -->
+    <TargetPlatformVersion Condition="'$(TargetFramework)' == 'uap10.0.16299'">10.0.18362.0</TargetPlatformVersion>
     <RootNamespace>Microsoft.ApplicationInsights</RootNamespace>
-    <Description>Based on Application Insights SDK Windows for Desktop</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>Based on Application Insights SDK Windows for Desktop</Description>    
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>embedded</DebugType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Authors>Oren Novotny</Authors>
     <PackageTags>Azure Monitoring Analytics ApplicationInsights Telemetry AppInsights</PackageTags>
-    <PackageProjectUrl>https://github.com/onovotny/AppInsights.WindowsDesktop</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/novotnyllc/AppInsights.WindowsDesktop</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0' or '$(TargetFramework)' == 'net461'">
