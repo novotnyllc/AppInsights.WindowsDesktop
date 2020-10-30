@@ -1,4 +1,4 @@
-﻿#if NET461 || NETCOREAPP3_0 
+﻿#if WINDOWS
 using Microsoft.ApplicationInsights.Extensibility;
 using System;
 using System.Collections.Generic;

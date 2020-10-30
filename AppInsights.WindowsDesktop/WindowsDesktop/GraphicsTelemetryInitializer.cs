@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP3_0 || NET461 || NETFX_CORE
+﻿#if WINDOWS || NETFX_CORE
 using System;
 using System.Collections.Generic;
 using System.Linq;

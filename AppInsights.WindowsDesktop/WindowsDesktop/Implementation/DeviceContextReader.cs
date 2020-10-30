@@ -6,7 +6,7 @@
     using System.Threading;
 
 
-#if NET461 || NETCOREAPP3_0
+#if WINDOWS
     using Win32;
     using System.Management;
 #endif
@@ -102,7 +102,7 @@
         }
 
 
-#if NET461 || NETCOREAPP3_0
+#if WINDOWS
         private string deviceId;
         private string deviceManufacturer;
         private string deviceName;

@@ -1,4 +1,4 @@
-﻿#if NET461 || NETCOREAPP3_0 || NETFX_CORE
+﻿#if WINDOWS || NETFX_CORE
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
 

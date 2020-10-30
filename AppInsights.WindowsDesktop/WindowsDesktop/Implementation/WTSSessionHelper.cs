@@ -1,4 +1,4 @@
-﻿#if NET461 || NETCOREAPP3_0 || NETFX_CORE
+﻿#if WINDOWS || NETFX_CORE
 using System;
 #if !NETFX_CORE
 using System.Runtime.InteropServices;

@@ -1,9 +1,9 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.0;uap10.0.16299;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1;uap10.0.16299;net461;net5.0;net5.0-windows10.0.19041</TargetFrameworks>
     <!-- Build with latest SDK even when TPMV is less -->
-    <TargetPlatformVersion Condition="'$(TargetFramework)' == 'uap10.0.16299'">10.0.18362.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition="'$(TargetFramework)' == 'uap10.0.16299'">10.0.19041.0</TargetPlatformVersion>
     <RootNamespace>Microsoft.ApplicationInsights</RootNamespace>
     <Description>Based on Application Insights SDK Windows for Desktop</Description>    
     <SignAssembly>true</SignAssembly>
@@ -14,7 +14,8 @@
     <PackageProjectUrl>https://github.com/novotnyllc/AppInsights.WindowsDesktop</PackageProjectUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0' or '$(TargetFramework)' == 'net461'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net461' or $(TargetFramework.Contains('-windows'))">
+    <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWpf>true</UseWpf>
   </PropertyGroup>
@@ -25,7 +26,11 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+  <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+    <PackageReference Include="System.Management" Version="5.0.0-rc.2.20475.5" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
     <PackageReference Include="System.Management" Version="4.7.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
   </ItemGroup>
