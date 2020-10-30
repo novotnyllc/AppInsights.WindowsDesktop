@@ -1,5 +1,7 @@
 {
-  "allowPrerelease": true,
+  "sdk": {
+    "allowPrerelease": true
+  }, 
   "msbuild-sdks": {
     "MSBuild.Sdk.Extras": "2.1.2"
   }
