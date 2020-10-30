@@ -38,7 +38,7 @@
                 telemetry.Context.Device.Type = reader.GetDeviceType();
                 telemetry.Context.Device.OperatingSystem = _operatingSystem;
 
-#if NET461 || NETCOREAPP3_0
+#if WINDOWS
                 telemetry.Context.Device.Id = reader.GetDeviceUniqueId();
                 telemetry.Context.Device.OemName = reader.GetOemName();
                 telemetry.Context.Device.Model = reader.GetDeviceModel();
