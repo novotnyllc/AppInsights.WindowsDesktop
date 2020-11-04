@@ -1,5 +1,0 @@
-<Project>
-  <PropertyGroup>
-     <NuspecProperties>version=$(NuGetPackageVersion);RepositoryCommit=$(GitCommitId);configuration=$(Configuration)</NuspecProperties>
-  </PropertyGroup>
-</Project>
