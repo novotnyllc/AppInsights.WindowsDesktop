@@ -13,7 +13,6 @@
     <PackageTags>Azure Monitoring Analytics ApplicationInsights Telemetry AppInsights</PackageTags>
     <PackageProjectUrl>https://github.com/novotnyllc/AppInsights.WindowsDesktop</PackageProjectUrl>
     <NuspecFile>AppInsights.WindowsDesktop.nuspec</NuspecFile>
-    <NuspecProperties>version=$(NuGetPackageVersion);RepositoryCommit=$(GitCommitId);configuration=$(Configuration)</NuspecProperties>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net461' or $(TargetFramework.Contains('-windows'))">
