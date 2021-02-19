@@ -90,8 +90,8 @@ namespace Microsoft.ApplicationInsights.WindowsDesktop
                 out deviceOut,
                 out featureLevelRef,
                 out immediateContextOut);
-            if (deviceOut != null) Marshal.Release(deviceOut);
-            if (immediateContextOut != null) Marshal.Release(immediateContextOut);
+            if (deviceOut != IntPtr.Zero) Marshal.Release(deviceOut);
+            if (immediateContextOut != IntPtr.Zero) Marshal.Release(immediateContextOut);
             if (featureLevelRef <= D3D_FEATURE_LEVEL_9_1) return 9.1;
             if (featureLevelRef <= D3D_FEATURE_LEVEL_9_2) return 9.2;
             if (featureLevelRef <= D3D_FEATURE_LEVEL_9_3) return 9.3;
