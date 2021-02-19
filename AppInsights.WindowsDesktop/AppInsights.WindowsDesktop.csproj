@@ -7,8 +7,7 @@
     <RootNamespace>Microsoft.ApplicationInsights</RootNamespace>
     <Description>Based on Application Insights SDK Windows for Desktop</Description>    
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
-    <DebugType>embedded</DebugType>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>    
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageTags>Azure Monitoring Analytics ApplicationInsights Telemetry AppInsights</PackageTags>
     <PackageProjectUrl>https://github.com/novotnyllc/AppInsights.WindowsDesktop</PackageProjectUrl>
@@ -22,8 +21,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.17.0" />
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.3.37" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
