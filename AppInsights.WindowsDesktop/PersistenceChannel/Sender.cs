@@ -7,6 +7,7 @@ namespace Microsoft.ApplicationInsights.Channel
     using System;
     using System.Globalization;
     using System.Net;
+    using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing;
@@ -144,7 +145,7 @@ namespace Microsoft.ApplicationInsights.Channel
         /// Stops the sender. 
         /// </summary>
         internal Task StopAsync()
-        {   
+        {
             // After delayHandler is set, a sending iteration will immidiately start. 
             // Seting <c>stopped</c> to ture, will cause the iteration to skip the actual sending and stop immediately. 
             this.stopped = true;
@@ -153,15 +154,15 @@ namespace Microsoft.ApplicationInsights.Channel
             // if delayHandler was set while a transmision was being sent, the return task waill wait for it to finsih, for an additional second,
             // before it will mark the task as completed. 
             return Task.Factory.StartNew(() =>
+            {
+                try
                 {
-                    try
-                    {   
-                        this.stoppedHandler.WaitOne(this.drainingTimeout);
-                    }
-                    catch (ObjectDisposedException)
-                    {
-                    }
-                });
+                    this.stoppedHandler.WaitOne(this.drainingTimeout);
+                }
+                catch (ObjectDisposedException)
+                {
+                }
+            });
         }
 
         /// <summary>
@@ -220,16 +221,25 @@ namespace Microsoft.ApplicationInsights.Channel
         /// <param name="nextSendInterval">When this value returns it will hold a recommendation for when to start the next sending iteration.</param>
         /// <returns>A boolean value that indicates if there was a retriable error.</returns>        
         protected virtual bool Send(StorageTransmission transmission, ref TimeSpan nextSendInterval)
-        {   
+        {
             try
             {
                 if (transmission != null)
                 {
                     transmission.SendAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                    
+
                     // After a successful sending, try immeidiately to send another transmission. 
                     nextSendInterval = this.SendingInterval;
                 }
+            }
+            // https://github.com/microsoft/ApplicationInsights-dotnet/blob/70e438848915ec163fd7794221b27be34260d3b4/BASE/src/Microsoft.ApplicationInsights/Channel/Transmission.cs#L158
+            // HttpClient.SendAsync throws HttpRequestException only on the following scenarios:
+            // "The request failed due to an underlying issue such as network connectivity, DNS failure, server certificate validation or timeout."
+            // i.e for Server errors (500 status code), no exception is thrown. 
+            catch (HttpRequestException)
+            {
+                nextSendInterval = this.CalculateNextInterval(null, nextSendInterval, this.maxIntervalBetweenRetries);
+                return true;
             }
             catch (WebException e)
             {
@@ -252,7 +262,7 @@ namespace Microsoft.ApplicationInsights.Channel
         /// Logging every interval will just make the log noisy. 
         /// </summary>        
         private static void LogInterval(TimeSpan prevSendInterval, TimeSpan nextSendInterval)
-        {   
+        {
             if (Math.Abs(nextSendInterval.TotalSeconds - prevSendInterval.TotalSeconds) > 60)
             {
                 CoreEventSource.Log.LogVerbose("next sending interval: " + nextSendInterval);
@@ -263,7 +273,7 @@ namespace Microsoft.ApplicationInsights.Channel
         /// Return the status code from the web exception or null if no such code exists. 
         /// </summary>
         private static int? GetStatusCode(WebException e)
-        {   
+        {
             HttpWebResponse httpWebResponse = e.Response as HttpWebResponse;
             if (httpWebResponse != null)
             {
