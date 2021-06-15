@@ -38,7 +38,7 @@ Add an `ApplicationInsights.config` file to your main executable project with an
     <!--<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.WTSSessionTelemetryInitializer, AppInsights.WindowsDesktop"/>-->
   </TelemetryInitializers>
   <TelemetryModules>
-    <Add Type="Microsoft.ApplicationInsights.DependencyCollector.DependencyTrackingTelemetryModule, Microsoft.AI.DependencyCollector"
+    <Add Type="Microsoft.ApplicationInsights.DependencyCollector.DependencyTrackingTelemetryModule, Microsoft.AI.DependencyCollector" >
       <ExcludeComponentCorrelationHttpHeadersOnDomains>
         <!-- 
         Requests to the following hostnames will not be modified by adding correlation headers.         
@@ -53,7 +53,7 @@ Add an `ApplicationInsights.config` file to your main executable project with an
         <Add>Microsoft.Azure.EventHubs</Add>
         <Add>Microsoft.Azure.ServiceBus</Add>
       </IncludeDiagnosticSourceActivities>
-    /Add>
+    </Add>
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.DeveloperModeWithDebuggerAttachedTelemetryModule, AppInsights.WindowsDesktop" />
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnhandledExceptionTelemetryModule, AppInsights.WindowsDesktop"/>
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnobservedExceptionTelemetryModule, AppInsights.WindowsDesktop" />
