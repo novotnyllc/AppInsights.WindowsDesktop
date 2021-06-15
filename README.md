@@ -30,6 +30,7 @@ Add an `ApplicationInsights.config` file to your main executable project with an
 <?xml version="1.0" encoding="utf-8"?>
 <ApplicationInsights xmlns="http://schemas.microsoft.com/ApplicationInsights/2013/Settings">
   <TelemetryInitializers>
+    <Add Type="Microsoft.ApplicationInsights.DependencyCollector.HttpDependenciesParsingTelemetryInitializer, Microsoft.AI.DependencyCollector" />
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.DeviceTelemetryInitializer, AppInsights.WindowsDesktop"/>
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.SessionTelemetryInitializer, AppInsights.WindowsDesktop"/>
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.VersionTelemetryInitializer, AppInsights.WindowsDesktop"/>
@@ -37,17 +38,34 @@ Add an `ApplicationInsights.config` file to your main executable project with an
     <!--<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.WTSSessionTelemetryInitializer, AppInsights.WindowsDesktop"/>-->
   </TelemetryInitializers>
   <TelemetryModules>
-    <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.DeveloperModeWithDebuggerAttachedTelemetryModule, AppInsights.WindowsDesktop"/>
+    <Add Type="Microsoft.ApplicationInsights.DependencyCollector.DependencyTrackingTelemetryModule, Microsoft.AI.DependencyCollector"
+      <ExcludeComponentCorrelationHttpHeadersOnDomains>
+        <!-- 
+        Requests to the following hostnames will not be modified by adding correlation headers.         
+        Add entries here to exclude additional hostnames.
+        -->
+        <Add>core.windows.net</Add>
+        <Add>core.chinacloudapi.cn</Add>
+        <Add>core.cloudapi.de</Add>
+        <Add>core.usgovcloudapi.net</Add>
+      </ExcludeComponentCorrelationHttpHeadersOnDomains>
+      <IncludeDiagnosticSourceActivities>
+        <Add>Microsoft.Azure.EventHubs</Add>
+        <Add>Microsoft.Azure.ServiceBus</Add>
+      </IncludeDiagnosticSourceActivities>
+    /Add>
+    <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.DeveloperModeWithDebuggerAttachedTelemetryModule, AppInsights.WindowsDesktop" />
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnhandledExceptionTelemetryModule, AppInsights.WindowsDesktop"/>
     <Add Type="Microsoft.ApplicationInsights.WindowsDesktop.UnobservedExceptionTelemetryModule, AppInsights.WindowsDesktop" />
     <!--<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.FirstChanceExceptionStatisticsTelemetryModule, AppInsights.WindowsDesktop" />-->
     <!--<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.WTSSessionTelemetryModule, AppInsights.WindowsDesktop" />-->
     <!--<Add Type="Microsoft.ApplicationInsights.WindowsDesktop.GraphicsTelemetryModule, AppInsights.WindowsDesktop" />-->
-  </TelemetryModules>
+  </TelemetryModules>  
   <TelemetryProcessors>
     <Add Type="Microsoft.ApplicationInsights.Extensibility.AutocollectedMetricsExtractor, Microsoft.ApplicationInsights"/>
   </TelemetryProcessors>
   <TelemetryChannel Type="Microsoft.ApplicationInsights.Channel.PersistenceChannel, AppInsights.WindowsDesktop"/>
+  <ApplicationIdProvider Type="Microsoft.ApplicationInsights.Extensibility.Implementation.ApplicationId.ApplicationInsightsApplicationIdProvider, Microsoft.ApplicationInsights"/>
 </ApplicationInsights>
 ```
 
