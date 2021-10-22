@@ -6,9 +6,6 @@ updates:
     interval: daily
   open-pull-requests-limit: 10
   ignore:
-  - dependency-name: MSBuild.Sdk.Extras
-    versions:
-    - 3.0.23
   - dependency-name: System.Management
     versions:
     - 5.0.0
