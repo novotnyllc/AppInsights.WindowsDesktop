@@ -15,7 +15,7 @@ stages:
   jobs:
   - job: Build
     pool: 
-      vmImage: windows-latest
+      vmImage: windows-2022
 
     variables: 
       BuildConfiguration: Release
@@ -24,7 +24,8 @@ stages:
     steps:
     - task: UseDotNet@2
       inputs:
-        version: 5.x
+        version: 6.x
+        includePreviewVersions: true
 
     - task: DotNetCoreCLI@2  
       inputs:
