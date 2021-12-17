@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.18.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.18.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.20.0" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.Contains('5.0-windows'))">
