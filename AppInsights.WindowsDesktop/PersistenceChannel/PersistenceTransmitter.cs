@@ -30,7 +30,7 @@ namespace Microsoft.ApplicationInsights.Channel
         /// A list of senders that sends transmissions. 
         /// </summary>
         private List<Sender> senders = new List<Sender>();
-        
+
         /// <summary>
         /// The storage that is used to persist all the transmissions. 
         /// </summary>
@@ -71,6 +71,11 @@ namespace Microsoft.ApplicationInsights.Channel
             {
                 this.mutex = new Mutex(initiallyOwned: false, name: this.storage.FolderName);
             }
+            // named mutex is not supported in Xamarin Android and iOS, it throws NotSupportedException, so we'll use unnamed mutex instead
+            catch (NotSupportedException)
+            {
+                this.mutex = new Mutex(initiallyOwned: false);
+            }
             catch (Exception e)
             {
                 string errorMsg = string.Format(CultureInfo.InvariantCulture, "PersistenceTransmitter: Failed to construct the mutex: {0}", e);
@@ -94,7 +99,7 @@ namespace Microsoft.ApplicationInsights.Channel
         /// Gets a unique folder name. This folder will be used to store the transmission files.
         /// </summary>
         internal string StorageUniqueFolder
-        { 
+        {
             get
             {
                 return this.storage.FolderName;
@@ -203,7 +208,7 @@ namespace Microsoft.ApplicationInsights.Channel
                 catch (ObjectDisposedException)
                 {
                     // if mutex or the auto reset event are disposed, just quit.
-                    return; 
+                    return;
                 }
             }
         }

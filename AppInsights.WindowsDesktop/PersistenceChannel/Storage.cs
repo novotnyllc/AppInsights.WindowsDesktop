@@ -184,7 +184,7 @@ namespace Microsoft.ApplicationInsights.Channel
         }
 
         internal override async Task EnqueueAsync(Transmission transmission)
-        {   
+        {
             try
             {
                 if (this.StorageFolder == null)
@@ -294,7 +294,7 @@ namespace Microsoft.ApplicationInsights.Channel
                 domainDirecotry = AppDomain.CurrentDomain.BaseDirectory;
             }
             catch (AppDomainUnloadedException e)
-            {   
+            {
                 CoreEventSource.Log.LogVerbose(string.Format("GetApplicationIdentity: Failed to read the domain's base directory. Exception: {0}", e));
             }
 
@@ -314,10 +314,10 @@ namespace Microsoft.ApplicationInsights.Channel
         }
 
         private static string GetSHA1Hash(string input)
-        {   
+        {
             byte[] inputBits = Encoding.Unicode.GetBytes(input);
             try
-            {   
+            {
                 byte[] hashBits = new SHA1CryptoServiceProvider().ComputeHash(inputBits);
                 var hashString = new StringBuilder();
                 foreach (byte b in hashBits)
@@ -338,11 +338,15 @@ namespace Microsoft.ApplicationInsights.Channel
         {
             IDictionary environment = Environment.GetEnvironmentVariables();
 
-            var folderOption1 = new { RootPath = environment["LOCALAPPDATA"] as string,   AISubFolder = @"Microsoft\ApplicationInsights" };
-            var folderOption2 = new { RootPath = environment["TEMP"] as string,           AISubFolder = @"Microsoft\ApplicationInsights" };
-            var folderOption3 = new { RootPath = environment["ProgramData"] as string,    AISubFolder = @"Microsoft ApplicationInsights" };
+            var folderOption1 = new { RootPath = environment["LOCALAPPDATA"] as string, AISubFolder = @"Microsoft\ApplicationInsights" };
+            var folderOption2 = new { RootPath = environment["TEMP"] as string, AISubFolder = @"Microsoft\ApplicationInsights" };
+            var folderOption3 = new { RootPath = environment["ProgramData"] as string, AISubFolder = @"Microsoft ApplicationInsights" };
+            // ANDROID
+            var folderOption4 = new { RootPath = environment["TMPDIR"] as string, AISubFolder = @"Microsoft ApplicationInsights" };
+            // iOS
+            var folderOption5 = new { RootPath = Path.GetTempPath(), AISubFolder = @"Microsoft ApplicationInsights" };
 
-            foreach (var folderOption in new[] { folderOption1, folderOption2, folderOption3 })
+            foreach (var folderOption in new[] { folderOption1, folderOption2, folderOption3, folderOption4, folderOption5 })
             {
                 try
                 {
